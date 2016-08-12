@@ -1,10 +1,7 @@
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by Roman on 12.08.2016.
@@ -16,10 +13,31 @@ public class Main {
     public static void main(String[] args) {
         loadDriver();
         LOGGER.info("Connecting to DB");
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/company")) {
+        String url = "jdbc:postgresql://localhost:5432/company";
+        String user = "user";
+        String password = "111";
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             Statement statement = connection.createStatement()) {
+
             LOGGER.info("Successfully connected to DB");
+
+            String sql = "SELECT * FROM EMPLOYEE";
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.setId(resultSet.getInt("ID"));
+                employee.setName(resultSet.getString("NAME"));
+                employee.setAge(resultSet.getInt("AGE"));
+                employee.setAddress(resultSet.getString("ADDRESS"));
+                employee.setSalary(resultSet.getFloat("SALARY"));
+                employee.setJoinDate(resultSet.getString("JOIN_DATE"));
+                System.out.println(employee.toString());
+
+            }
+
         } catch (SQLException e) {
-            LOGGER.error("");
+            LOGGER.error("Exception occurred while connecting to BD " + url, e);
             e.printStackTrace();
         }
     }
@@ -30,7 +48,7 @@ public class Main {
             Class.forName("org.postgresql.Driver");
             LOGGER.info("Driver has been successfully loaded");
         } catch (ClassNotFoundException e) {
-            LOGGER.error("Cannot find driver: org.postgresql.Driver" + e);
+            LOGGER.error("Cannot find driver: org.postgresql.Driver",  e);
             throw new RuntimeException(e);
         }
     }
