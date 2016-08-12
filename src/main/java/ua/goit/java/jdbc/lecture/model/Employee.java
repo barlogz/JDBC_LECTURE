@@ -1,3 +1,5 @@
+package ua.goit.java.jdbc.lecture.model;
+
 /**
  * Created by Roman on 12.08.2016.
  */
@@ -60,7 +62,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
+        return "ua.goit.java.jdbc.lecture.model.Employee{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
