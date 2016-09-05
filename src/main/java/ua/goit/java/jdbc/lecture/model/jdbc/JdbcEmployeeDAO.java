@@ -2,6 +2,8 @@ package ua.goit.java.jdbc.lecture.model.jdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ua.goit.java.jdbc.lecture.model.Employee;
 import ua.goit.java.jdbc.lecture.model.EmployeeDAO;
 
@@ -27,6 +29,7 @@ public class JdbcEmployeeDAO implements EmployeeDAO {
 //    }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public Employee load(int id) {
 //        Employee employee = null;
 
@@ -38,7 +41,7 @@ public class JdbcEmployeeDAO implements EmployeeDAO {
             if (resultSet.next()) {
                 return createEmployee(resultSet);
             } else {
-                throw new RuntimeException("cannot find employee with id " + id);
+                throw new RuntimeException("cannot findAll employee with id " + id);
             }
         } catch (SQLException e) {
             LOGGER.error("Exception occurred while connecting to BD " + /*url, */e);
@@ -48,7 +51,8 @@ public class JdbcEmployeeDAO implements EmployeeDAO {
 
 
     @Override
-    public List<Employee> find() {
+    @Transactional(propagation = Propagation.MANDATORY)
+    public List<Employee> findAll() {
         List<Employee> result = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -82,7 +86,7 @@ public class JdbcEmployeeDAO implements EmployeeDAO {
 //            Class.forName("org.postgresql.Driver");
 //            LOGGER.info("Driver has been successfully loaded");
 //        } catch (ClassNotFoundException e) {
-//            LOGGER.error("Cannot find driver: org.postgresql.Driver", e);
+//            LOGGER.error("Cannot findAll driver: org.postgresql.Driver", e);
 //            throw new RuntimeException(e);
 //        }
 //    }

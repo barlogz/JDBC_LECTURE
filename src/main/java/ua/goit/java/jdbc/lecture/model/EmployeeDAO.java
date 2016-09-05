@@ -8,5 +8,5 @@ import java.util.List;
 public interface EmployeeDAO {
     Employee load(int id);
 
-    List<Employee> find();
+    List<Employee> findAll();
 }
